@@ -52,6 +52,7 @@ class MyTello(Tello):
         ''' override to print response of the command '''
         response = super(MyTello, self).send_read_command(command)
         timePrint('Read %s: %s' %(command, response))
+        return response
 
     def query_speed(self):
         """ override query speed setting (cm/s) to return float """
