@@ -16,19 +16,6 @@ def help():
     print ('  help        - print this help menu')
     print ('  or just enter a valid Tello commands like "up 20", "left 50", "cw 90", "flip l"')
 
-def doCommandFromFile(fileName):
-    ''' load tello commands from file and send to tello '''
-    timePrint('Loading command file: %s' %fileName)
-    with open(fileName, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if len(line) == 0:
-                pass
-            elif '#' == line[0]:
-                pass
-            else:
-                executeCommand(line)
-
 def executeCommand(cmdstr):
     ''' execute the command str. returns False to quit '''
     msg = cmdstr.lower()
@@ -36,40 +23,21 @@ def executeCommand(cmdstr):
         timePrint ('bye ...')
         return False
     try:
-        if '1' == msg or 'land' == msg:
-            tello.land()
-        elif '0' == msg or 'takeoff' == msg:
-            tello.takeoff()
-        elif 'p' == msg or 'photo' == msg:
-            tello.takePicture('%s.png' %timestamp())
-        elif 'v' == msg or 'video' == msg:
-            tello.startOrStopVideo('%s.avi' %timestamp())
-        elif '?' == msg or 'help' == msg:
+        if '?' == msg or 'help' == msg:
             help()
-        elif '?' == msg[-1]:
-            # send read command
-            tello.send_read_command(msg)
-        elif 'sleep' in msg:
-            value = float(getValue(cmdstr, 1.0))
-            timePrint('Sleeping %f seconds ...' %value)
-            time.sleep(value)
-        elif 'run' in msg or 'load' in msg:
-            doCommandFromFile(getValue(cmdstr, 'telloCommands.txt'))
+            return True
         else:
+            if '1' == msg:
+                msg = 'land'
+            elif '0' == msg:
+                msg = 'takeoff'
+
             # send control command
-            #msg = msg.encode(encoding="utf-8") 
-            tello.send_control_command(msg)
-        return True
+            return tello.executeCommand(msg)
+
     except Exception as e:
         timePrint ('Error: ' + str(e))
-
-def getValue(cmdstr, default):
-    ''' get the command value from the str '''
-    try:
-        cmd, value = cmdstr.split(' ')
-        return value
-    except:
-        return default
+        return False
 
 tello = MyTello(log_level=logging.WARNING)	# logging.DEBUG logging.WARNING logging.INFO
 tello.connect(wait_for_state=True)

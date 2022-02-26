@@ -1,0 +1,12 @@
+# tello configuration file for Android portrait
+Window.fullscreen=True
+Window.top=30
+Window.left=70
+Window.width=800
+Window.height=400
+#
+DefaultSpeed=50
+DelayForContinuousCommands=0.1
+DefaultPhotoFolder=
+DefaultVideoFolder=
+StatusUpdateInterval=1.0

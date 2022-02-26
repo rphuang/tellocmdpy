@@ -1,0 +1,189 @@
+# tello.kv for Android portrait
+<MainWidget>:
+    orientation: 'vertical'
+  
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1, 0.1)
+        Button:
+            id: LandButton
+            text: 'Land'
+            on_release: root.land()
+        Button:
+            id: TakeoffButton
+            text: 'Takeoff'
+            on_release: root.takeoff()
+        Button:
+            id: ConnectButton
+            text: 'Connect'
+            on_release: root.connect()
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1, 0.1)
+        Button:
+            id: RunDemoButton
+            text: 'Run Demo'
+            on_release: root.runCommandFromFileAsync('samples/simple.txt')
+        Button:
+            id: VideoButton
+            text: 'Video'
+            on_release: root.startOrStopVideoAsync()
+        Button:
+            id: PhotoButton
+            text: 'Photo'
+            on_release: root.takePictureAsync()
+
+	GridLayout:
+		cols: 4
+		size_hint: (1, 0.15)
+		row_force_default: True
+		row_default_height: 60
+		#padding: 10, 10
+
+		Label:
+			text: 'Status: '
+			size_hint_x: 0.2
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			id: StatusLabel
+			text: 'Not Connected'
+			size_hint_x: 0.3
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			text: 'Height: '
+			size_hint_x: 0.2
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			id: HeightLabel
+			text: '0'
+			size_hint_x: 0.3
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			text: 'Speed: '
+			size_hint_x: 0.2
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			id: SpeedLabel
+			text: '100'
+			size_hint_x: 0.3
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			text: 'Battery: '
+			size_hint_x: 0.2
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			id: BatteryLabel
+			text: '100%'
+			size_hint_x: 0.3
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			text: 'Time: '
+			size_hint_x: 0.2
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			id: FlighttimeLabel
+			text: '0'
+			size_hint_x: 0.3
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			text: 'Temp: '
+			size_hint_x: 0.2
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+		Label:
+			id: TempLabel
+			text: ' '
+			size_hint_x: 0.3
+			text_size: self.size
+			halign: 'left'
+			valign: 'middle'
+
+    BoxLayout:
+        orientation: 'horizontal'
+		size_hint: (1, 0.45)
+        Label:
+            id: CommandLabel
+            text: 'cmd: '
+            font_size: 42
+			text_size: root.width, None
+			size: self.texture_size
+			text_size: self.size
+			halign: 'left'
+			valign: 'top'
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        BoxLayout:
+            orientation: 'vertical'
+            
+            Button:
+                id: UpButton
+                text: 'Up'
+                on_press: root.startCommandAsync('up 20')
+                on_release: root.stopCommand('up 20')
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    id: CCWButton
+                    text: 'CCW Rotate'
+                    on_press: root.startCommandAsync('ccw 20')
+                    on_release: root.stopCommand('ccw 20')
+                Button:
+                    id: CWButton
+                    text: 'CW Rotate'
+                    on_press: root.startCommandAsync('cw 20')
+                    on_release: root.stopCommand('cw 20')
+            Button:
+                id: DownButton
+                text: 'Down'
+                on_press: root.startCommandAsync('down 20')
+                on_release: root.stopCommand('down 20')
+
+        BoxLayout:
+            orientation: 'vertical'
+            
+            Button:
+                id: ForwardButton
+                text: 'Forward'
+                on_press: root.startCommandAsync('forward 20')
+                on_release: root.stopCommand('forward 20')
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    id: LeftButton
+                    text: 'Left'
+                    on_press: root.startCommandAsync('left 20')
+                    on_release: root.stopCommand('left 20')
+                Button:
+                    id: RightButton
+                    text: 'Right'
+                    on_press: root.startCommandAsync('right 20')
+                    on_release: root.stopCommand('right 20')
+            Button:
+                id: BackwardButton
+                text: 'Backward'
+                on_press: root.startCommandAsync('back 20')
+                on_release: root.stopCommand('back 20')
+
