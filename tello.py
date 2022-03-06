@@ -7,9 +7,10 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
 
-from config import Config
+from IotLib.config import Config
+from IotLib.log import Log
+from IotLib.pyUtils import timestamp, startThread
 from myTello import MyTello
-from pyUtils import timePrint, timestamp, startThread
 
 class MainWidget(BoxLayout):
     """ The main/root widget for the ExifPhotos. The UI is defined in .kv file """
@@ -22,8 +23,14 @@ class MainWidget(BoxLayout):
         self.defaultPhotoFolder = config.getOrAdd('DefaultPhotoFolder', '')
         self.defaultVideoFolder = config.getOrAdd('DefaultVideoFolder', '')
         self.statusUpdateInterval = config.getOrAddFloat('StatusUpdateInterval', 5.0)
+        self.videoClassifier = config.getOrAdd('Video.Classifier', 'haarcascade_frontalface_alt.xml')
+        self.defaultSpeed = int(self.ids.SpeedInput.text)
+        self.videoWidth = int(self.ids.WidthInput.text)
+        self.videoHeight = int(self.ids.HeightInput.text)
         # create MyTello (logging options: logging.DEBUG logging.WARNING logging.INFO)
-        self.tello = MyTello(log_level=logging.WARNING, defaultPhotoFolder=self.defaultPhotoFolder, defaultVideoFolder=self.defaultVideoFolder, commandCallback = self._showCommand, postCmdCallback = self._showCommandResult)	
+        self.tello = MyTello(log_level=logging.WARNING,
+                            commandCallback = self._showCommand, postCmdCallback = self._showCommandResult,
+                            videoWidth = self.videoWidth, videoHeight = self.videoHeight, faceClassifierFile = self.videoClassifier)	
         # init the command dictionary
         self._commands = {}
         self._commandsBuffer = ['', '', '']
@@ -32,6 +39,12 @@ class MainWidget(BoxLayout):
         # start thread to update status
         self.updateStatus = True
         self.statusThread = startThread(context='Updating Tello status', target=self._updateStatus, front=True)
+
+    def setSpeed(self, speed):
+        """ set default speed """
+        self.defaultSpeed = int(speed)
+        if self.connected:
+            self.sendCommand('speed %i' %self.defaultSpeed)
 
     def connect(self):
         """ connect to tello """
@@ -50,6 +63,11 @@ class MainWidget(BoxLayout):
     def land(self):
         """ land """
         self.tello.executeCommand('land')
+
+    def sendRcControl(self, left_right_velocity, forward_backward_velocity, up_down_velocity, yaw_velocity):
+        """ Send RC control via four channels. Input RC values can be float that will be multiplied be default speed. """
+        self.tello.send_rc_control(int(left_right_velocity * self.defaultSpeed), int(forward_backward_velocity * self.defaultSpeed), 
+                                   int(up_down_velocity * self.defaultSpeed), int(yaw_velocity * self.defaultSpeed))
 
     def sendCommand(self, cmd):
         """ send a command to Tello """
@@ -73,12 +91,22 @@ class MainWidget(BoxLayout):
     def takePictureAsync(self):
         """ take a picture and save to file with current time as file name """
         fileName = '%s.png' %timestamp()
+        fileName = os.path.join(self.defaultPhotoFolder, fileName)
         startThread(context='Save photo to file: %s' %fileName, target=self.tello.takePicture, front=True, args=(fileName,))
 
-    def startOrStopVideoAsync(self):
+    def startOrStopStreamVideoAsync(self):
+        """ start/stop video streaming in separate window """
+        self.tello.startOrStopStreamVideoAsync()
+
+    def startOrStopFaceTrackingAsync(self):
+        """ start/stop video streaming in separate window """
+        self.tello.startOrStopFaceTrackingAsync()
+
+    def startOrStopSaveVideoAsync(self):
         """ start/stop a video and save to file with current time as file name """
         fileName = '%s.avi' %timestamp()
-        startThread(context='Save video to file: %s' %fileName, target=self.tello.startOrStopVideo, front=True, args=(fileName,))
+        fileName = os.path.join(self.defaultVideoFolder, fileName)
+        self.tello.startOrStopSaveVideoAsync(fileName)
 
     def runCommandFromFileAsync(self, fileName):
         ''' load tello commands from file parse and send to tello '''
@@ -106,7 +134,7 @@ class MainWidget(BoxLayout):
     def _displayCommands(self):
         """ display last 7 commands """
         text = ''
-        for item in self._commandsBuffer[-7:]:
+        for item in self._commandsBuffer[-10:]:
             if len(text) == 0:
                 text = item
             else:
@@ -121,13 +149,14 @@ class MainWidget(BoxLayout):
             count += 1
             time.sleep(self.runCmdDelay)
 
-        timePrint('Run command %s for %i times' %(cmd, count))
+        Log.info('Run command %s for %i times' %(cmd, count))
 
     def _updateStatus(self):
         """ runs every self.statusUpdateInterval seconds to get battery status (should be run in a separate thread) """
         while self.updateStatus:
             try:
                 if self.connected:
+                    self.ids.ConnectButton.background_color = (0, 1, 0, 1)
                     if self.tello.is_flying:
                         self.ids.StatusLabel.text = 'Flying'
                     else:
@@ -136,14 +165,24 @@ class MainWidget(BoxLayout):
                     self.ids.HeightLabel.text = str(self.tello.get_height())
                     self.ids.TempLabel.text = str(self.tello.get_temperature())
                     self.ids.FlighttimeLabel.text = str(self.tello.get_flight_time())
-                    self.ids.SpeedLabel.text = str(self.tello.query_speed())
+                    if 'StreamButton' in self.ids:
+                        if self.tello.recordingVideo: self.ids.VideoButton.background_color = (0, 1, 0, 1)
+                        else: self.ids.VideoButton.background_color = (1, 1, 1, 1)
+                        if self.tello.streamingVideo: self.ids.StreamButton.background_color = (0, 1, 0, 1)
+                        else: self.ids.StreamButton.background_color = (1, 1, 1, 1)
+                        if self.tello.faceTracking: self.ids.FaceTrackButton.background_color = (0, 1, 0, 1)
+                        else: self.ids.FaceTrackButton.background_color = (1, 1, 1, 1)
                 else:
+                    self.ids.ConnectButton.background_color = (1, 1, 1, 1)
                     self.ids.StatusLabel.text = 'Not Connected'
                     self.ids.BatteryLabel.text = '??%'
                     self.ids.HeightLabel.text = '??'
                     self.ids.TempLabel.text = '??'
                     self.ids.FlighttimeLabel.text = '??'
-                    self.ids.SpeedLabel.text = str(self.defaultSpeed)
+                    if 'StreamButton' in self.ids:
+                        self.ids.VideoButton.background_color = (1, 1, 1, 1)
+                        self.ids.StreamButton.background_color = (1, 1, 1, 1)
+                        self.ids.FaceTrackButton.background_color = (1, 1, 1, 1)
             except:
                 pass
             time.sleep(self.statusUpdateInterval)
@@ -160,6 +199,8 @@ class telloApp(App):
         return self.mainWidget
 
 if __name__ == '__main__':
+    Log.WriteToConsole = True
+    Log.WriteToLogging = False
     configFile='telloConfig.txt'
     if len(sys.argv) > 1:
         configFile = sys.argv[1]

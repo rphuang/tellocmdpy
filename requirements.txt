@@ -1,3 +1,4 @@
 opencv-python
 djitellopy
 kivy
+https://github.com/rphuang/IotDevicesPy

@@ -22,9 +22,29 @@
             text: 'Run Demo'
             on_release: root.runCommandFromFileAsync('samples\simple.txt')
         Button:
+            id: RunDemo2Button
+            text: 'Run Demo2'
+            on_release: root.runCommandFromFileAsync('samples\video360.txt')
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1, 0.12)
+        Button:
+            id: FlyPathButton
+            text: '  '
+            #on_release: root.takeoff()
+        Button:
+            id: FaceTrackButton
+            text: 'Face Tracking'
+            on_release: root.startOrStopFaceTrackingAsync()
+        Button:
+            id: StreamButton
+            text: 'Stream'
+            on_release: root.startOrStopStreamVideoAsync()
+        Button:
             id: VideoButton
             text: 'Video'
-            on_release: root.startOrStopVideoAsync()
+            on_release: root.startOrStopSaveVideoAsync()
         Button:
             id: PhotoButton
             text: 'Photo'
@@ -32,7 +52,7 @@
 
     BoxLayout:
         orientation: 'horizontal'
-        size_hint_y: 0.42
+        size_hint_y: 0.5
 
 		ScrollView:
 			do_scroll_x: False
@@ -53,9 +73,54 @@
 			cols: 2
 			size_hint: (0.3, 1)
 			row_force_default: True
-			row_default_height: 23
+			row_default_height: 28
 			#padding: 10, 10
 
+			Label:
+				text: 'Speed: '
+				size_hint_x: 0.2
+				text_size: self.size
+				halign: 'left'
+				valign: 'middle'
+			TextInput:
+				id: SpeedInput
+				text: '50'
+				multiline: False
+				size_hint_x: 0.3
+				text_size: self.size
+				halign: 'left'
+				valign: 'middle'
+				on_text_validate: root.setSpeed(self.text)
+			Label:
+				text: 'Width: '
+				size_hint_x: 0.2
+				text_size: self.size
+				halign: 'left'
+				valign: 'middle'
+			TextInput:
+				id: WidthInput
+				text: '960'
+				multiline: False
+				size_hint_x: 0.3
+				text_size: self.size
+				halign: 'left'
+				valign: 'middle'
+				on_text_validate: root.videoWidth = int(self.text)
+			Label:
+				text: 'Height: '
+				size_hint_x: 0.2
+				text_size: self.size
+				halign: 'left'
+				valign: 'middle'
+			TextInput:
+				id: HeightInput
+				text: '720'
+				multiline: False
+				size_hint_x: 0.3
+				text_size: self.size
+				halign: 'left'
+				valign: 'middle'
+				on_text_validate: root.videoHeight = int(self.text)
 			Label:
 				text: 'Status: '
 				size_hint_x: 0.2
@@ -78,19 +143,6 @@
 			Label:
 				id: HeightLabel
 				text: '0'
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				text: 'Speed: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				id: SpeedLabel
-				text: '100'
 				size_hint_x: 0.3
 				text_size: self.size
 				halign: 'left'
@@ -143,51 +195,61 @@
             orientation: 'vertical'
             
             Button:
+                id: CircleLeftButton
+                text: 'Circle Left'
+                on_press: root.sendRcControl(-1, 1, 0, 1)
+                on_release: root.sendRcControl(0, 0, 0, 0)
+            Button:
                 id: UpButton
                 text: 'Up'
-                on_press: root.startCommandAsync('up 20')
-                on_release: root.stopCommand('up 20')
+                on_press: root.sendRcControl(0, 0, 1, 0)
+                on_release: root.sendRcControl(0, 0, 0, 0)
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     id: CCWButton
                     text: 'CCW Rotate'
-                    on_press: root.startCommandAsync('ccw 20')
-                    on_release: root.stopCommand('ccw 20')
+                    on_press: root.sendRcControl(0, 0, 0, -1)
+                    on_release: root.sendRcControl(0, 0, 0, 0)
                 Button:
                     id: CWButton
                     text: 'CW Rotate'
-                    on_press: root.startCommandAsync('cw 20')
-                    on_release: root.stopCommand('cw 20')
+                    on_press: root.sendRcControl(0, 0, 0, 1)
+                    on_release: root.sendRcControl(0, 0, 0, 0)
             Button:
                 id: DownButton
                 text: 'Down'
-                on_press: root.startCommandAsync('down 20')
-                on_release: root.stopCommand('down 20')
+                on_press: root.sendRcControl(0, 0, -1, 0)
+                on_release: root.sendRcControl(0, 0, 0, 0)
 
         BoxLayout:
             orientation: 'vertical'
             
             Button:
+                id: CircleRightButton
+                text: 'Circle Right'
+                on_press: root.sendRcControl(1, 1, 0, -1)
+                on_release: root.sendRcControl(0, 0, 0, 0)
+            Button:
                 id: ForwardButton
                 text: 'Forward'
-                on_press: root.startCommandAsync('forward 20')
-                on_release: root.stopCommand('forward 20')
+                on_press: root.sendRcControl(0, 1, 0, 0)
+                on_release: root.sendRcControl(0, 0, 0, 0)
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     id: LeftButton
                     text: 'Left'
-                    on_press: root.startCommandAsync('left 20')
-                    on_release: root.stopCommand('left 20')
+                    on_press: root.sendRcControl(-1, 0, 0, 0)
+                    on_release: root.sendRcControl(0, 0, 0, 0)
                 Button:
                     id: RightButton
                     text: 'Right'
-                    on_press: root.startCommandAsync('right 20')
-                    on_release: root.stopCommand('right 20')
+                    on_press: root.sendRcControl(1, 0, 0, 0)
+                    on_release: root.sendRcControl(0, 0, 0, 0)
             Button:
                 id: BackwardButton
                 text: 'Backward'
-                on_press: root.startCommandAsync('back 20')
-                on_release: root.stopCommand('back 20')
+                on_press: root.sendRcControl(0, -1, 0, 0)
+                on_release: root.sendRcControl(0, 0, 0, 0)
 

@@ -5,8 +5,9 @@ Window.left=70
 Window.width=1000
 Window.height=500
 #
-DefaultSpeed=50
 DelayForContinuousCommands=0.1
 DefaultPhotoFolder=C:\temp\tello
 DefaultVideoFolder=C:\temp\tello
 StatusUpdateInterval=1.0
+#
+Video.Classifier=data\haarcascade_frontalface_alt.xml

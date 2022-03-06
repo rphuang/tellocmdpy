@@ -1,7 +1,8 @@
 import time
 import logging
 from djitellopy import Tello
-from pyUtils import timePrint, timestamp
+from IotLib.log import Log
+from IotLib.pyUtils import timestamp
 from myTello import MyTello
 
 def help():
@@ -20,7 +21,7 @@ def executeCommand(cmdstr):
     ''' execute the command str. returns False to quit '''
     msg = cmdstr.lower()
     if 'end' in msg or '2' == msg:
-        timePrint ('bye ...')
+        Log.info ('bye ...')
         return False
     try:
         if '?' == msg or 'help' == msg:
@@ -36,24 +37,26 @@ def executeCommand(cmdstr):
             return tello.executeCommand(msg)
 
     except Exception as e:
-        timePrint ('Error: ' + str(e))
+        Log.error ('Error: ' + str(e))
         return False
 
+Log.WriteToConsole = True
+Log.WriteToLogging = False
 tello = MyTello(log_level=logging.WARNING)	# logging.DEBUG logging.WARNING logging.INFO
 tello.connect(wait_for_state=True)
 while True:
     try:
         msg0 = input("0-takeoff, 1-land, 2-end, run, photo, video, sleep, or just type tello commands? ");
         if not msg0:
-            timePrint ('bye ...')
+            Log.info ('bye ...')
             break
         if not executeCommand(msg0):
             break
     except KeyboardInterrupt:
-        timePrint ('KeyboardInterrupt  . . .\n')
+        Log.error ('KeyboardInterrupt  . . .\n')
         break
 
 try:
-    timePrint('Stopping Tello with battery: %s' %(str(tello.query_battery())))
+    Log.info('Stopping Tello with battery: %s' %(str(tello.query_battery())))
 except:
     pass

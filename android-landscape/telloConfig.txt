@@ -5,8 +5,9 @@ Window.left=70
 Window.width=800
 Window.height=400
 #
-DefaultSpeed=50
 DelayForContinuousCommands=0.1
 DefaultPhotoFolder=
 DefaultVideoFolder=
 StatusUpdateInterval=1.0
+#
+Video.Classifier=data/haarcascade_frontalface_alt.xml
