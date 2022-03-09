@@ -29,8 +29,9 @@ class MainWidget(BoxLayout):
         self.videoHeight = int(self.ids.HeightInput.text)
         # create MyTello (logging options: logging.DEBUG logging.WARNING logging.INFO)
         self.tello = MyTello(log_level=logging.WARNING,
-                            commandCallback = self._showCommand, postCmdCallback = self._showCommandResult,
-                            videoWidth = self.videoWidth, videoHeight = self.videoHeight, faceClassifierFile = self.videoClassifier)	
+                            commandCallback = self._showCommand, postCmdCallback = self._showCommandResult, faceClassifierFile = self.videoClassifier)
+        self._setVideoSizePosition()
+
         # init the command dictionary
         self._commands = {}
         self._commandsBuffer = ['', '', '']
@@ -45,6 +46,14 @@ class MainWidget(BoxLayout):
         self.defaultSpeed = int(speed)
         if self.connected:
             self.sendCommand('speed %i' %self.defaultSpeed)
+
+    def setVideoWidth(self, width):
+        self.videoWidth = int(width)
+        self._setVideoSizePosition()
+
+    def setVideoHeight(self, height):
+        self.videoHeight = int(height)
+        self._setVideoSizePosition()
 
     def connect(self):
         """ connect to tello """
@@ -150,6 +159,11 @@ class MainWidget(BoxLayout):
             time.sleep(self.runCmdDelay)
 
         Log.info('Run command %s for %i times' %(cmd, count))
+
+    def _setVideoSizePosition(self):
+        windowWidth, windowHeight = Window.size
+        videoPosition = (Window.left + windowWidth, 0)
+        self.tello.setVideoSizePosition(videoSize = (self.videoWidth, self.videoHeight), videoPosition = videoPosition)
 
     def _updateStatus(self):
         """ runs every self.statusUpdateInterval seconds to get battery status (should be run in a separate thread) """

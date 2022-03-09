@@ -105,7 +105,7 @@
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
-                on_text_validate: root.videoWidth = int(self.text)
+                on_text_validate: root.setVideoWidth(self.text)
             Label:
                 text: 'Video Height'
                 size_hint_x: 0.2
@@ -120,7 +120,7 @@
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
-                on_text_validate: root.videoHeight = int(self.text)
+                on_text_validate: root.setVideoHeight(self.text)
             Label:
                 text: 'Status: '
                 size_hint_x: 0.2

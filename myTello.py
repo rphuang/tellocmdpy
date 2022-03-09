@@ -16,7 +16,7 @@ except:
 class MyTello(Tello):
     ''' override Tello '''
     def __init__(self, host=Tello.TELLO_IP, retry_count=Tello.RETRY_COUNT, log_level=logging.INFO,
-                commandCallback = None, postCmdCallback = None, videoWidth = 960, videoHeight = 720,
+                commandCallback = None, postCmdCallback = None, videoSize = (960, 720), videoPosition = None,
                 faceClassifierFile=''):
         Tello.LOGGER.setLevel(log_level)	# logging.DEBUG logging.WARNING logging.INFO
         super(MyTello, self).__init__(host, retry_count)
@@ -24,8 +24,8 @@ class MyTello(Tello):
         self.recordingVideo = False
         self.streamingVideo = False
         self.faceTracking = False
-        self.videoWidth = videoWidth
-        self.videoHeight = videoHeight
+        self.videoSize = videoSize
+        self.videoPosition = videoPosition
         self.faceClassifierFile = faceClassifierFile
         self.faceTracker = None
         self.videoFileName = ''
@@ -123,6 +123,11 @@ class MyTello(Tello):
         """ override end method to stop video recording if still running """
         self.stopVideo()
         super(MyTello, self).end()
+
+    def setVideoSizePosition(self, videoSize = (960, 720), videoPosition = None):
+        """ set size and position for video """
+        self.videoSize = videoSize
+        self.videoPosition = videoPosition
 
     def takePicture(self, fileName):
         ''' take a picture and save to a png file '''
@@ -223,13 +228,13 @@ class MyTello(Tello):
         frameOk = True      # whether there is error in handling video frame
         videoWriter = None  # for recording video to file
         frame_read = self.get_frame_read()
+        videoWindowName = None  # set imshow window name to None 
 
         while self.streamingVideo or self.recordingVideo or self.faceTracking:
             try:
                 frame = frame_read.frame
                 # resize the image frame if necessary
-                width = self.videoWidth
-                height = self.videoHeight
+                width, height = self.videoSize
                 height0, width0, _ = frame.shape
                 if height != height0 or width != width0:
                     frame = cv2.resize(frame, (width, height))
@@ -246,7 +251,15 @@ class MyTello(Tello):
                     videoWriter = None
 
                 if self.streamingVideo:
-                    cv2.imshow('Tello Stream', frame)
+                    if videoWindowName == None:
+                        videoWindowName = 'Tello Stream'
+                        if self.videoPosition != None:
+                            # Create a named window and move to self.videoPosition
+                            cv2.namedWindow(videoWindowName)
+                            left, top = self.videoPosition
+                            cv2.moveWindow(videoWindowName, left, top)
+
+                    cv2.imshow(videoWindowName, frame)
 
                 frameOk = True
             except Exception as err:
