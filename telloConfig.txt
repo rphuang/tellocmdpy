@@ -2,7 +2,7 @@
 Window.fullscreen=False
 Window.top=30
 Window.left=62
-Window.width=1000
+Window.width=900
 Window.height=800
 #
 DelayForContinuousCommands=0.1
@@ -11,3 +11,6 @@ DefaultVideoFolder=C:\temp\tello
 StatusUpdateInterval=1.0
 #
 Video.Classifier=data\haarcascade_frontalface_alt.xml
+Video.Streaming=True
+Video.Redording=False
+Video.Stamping=True

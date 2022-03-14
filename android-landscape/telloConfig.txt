@@ -11,3 +11,6 @@ DefaultVideoFolder=
 StatusUpdateInterval=1.0
 #
 Video.Classifier=data/haarcascade_frontalface_alt.xml
+Video.Streaming=False
+Video.Redording=False
+Video.Stamping=False

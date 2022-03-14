@@ -24,11 +24,14 @@ class MainWidget(BoxLayout):
         self.defaultVideoFolder = config.getOrAdd('DefaultVideoFolder', '')
         self.statusUpdateInterval = config.getOrAddFloat('StatusUpdateInterval', 5.0)
         self.videoClassifier = config.getOrAdd('Video.Classifier', 'haarcascade_frontalface_alt.xml')
+        self.videoStreaming = config.getOrAddBool('Video.Streaming', False)
+        self.videoRedording = config.getOrAddBool('Video.Redording', False)
+        self.videoStamping = config.getOrAddBool('Video.Stamping', False)
         self.defaultSpeed = int(self.ids.SpeedInput.text)
         self.videoWidth = int(self.ids.WidthInput.text)
         self.videoHeight = int(self.ids.HeightInput.text)
         # create MyTello (logging options: logging.DEBUG logging.WARNING logging.INFO)
-        self.tello = MyTello(log_level=logging.WARNING,
+        self.tello = MyTello(log_level=logging.WARNING, videoStamping = self.videoStamping,
                             commandCallback = self._showCommand, postCmdCallback = self._showCommandResult, faceClassifierFile = self.videoClassifier)
         self._setVideoSizePosition()
 
@@ -44,6 +47,7 @@ class MainWidget(BoxLayout):
     def setSpeed(self, speed):
         """ set default speed """
         self.defaultSpeed = int(speed)
+        self.ids.SpeedInput.text = str(self.defaultSpeed)
         if self.connected:
             self.sendCommand('speed %i' %self.defaultSpeed)
 
@@ -62,6 +66,10 @@ class MainWidget(BoxLayout):
         if self.connected:
             # set tello speed
             self.sendCommand('speed %i' %self.defaultSpeed)
+            if self.videoStreaming:
+                self.startOrStopStreamVideoAsync()
+            if self.videoRedording:
+                self.startOrStopSaveVideoAsync()
         else:
             self._showStatus('Failed to Connect')
 
@@ -73,10 +81,10 @@ class MainWidget(BoxLayout):
         """ land """
         self.tello.executeCommand('land')
 
-    def sendRcControl(self, left_right_velocity, forward_backward_velocity, up_down_velocity, yaw_velocity):
+    def sendRcControl(self, left_right_velocity, forward_backward_velocity, up_down_velocity, yaw_velocity, context: str = ''):
         """ Send RC control via four channels. Input RC values can be float that will be multiplied be default speed. """
         self.tello.send_rc_control(int(left_right_velocity * self.defaultSpeed), int(forward_backward_velocity * self.defaultSpeed), 
-                                   int(up_down_velocity * self.defaultSpeed), int(yaw_velocity * self.defaultSpeed))
+                                   int(up_down_velocity * self.defaultSpeed), int(yaw_velocity * self.defaultSpeed), context)
 
     def sendCommand(self, cmd):
         """ send a command to Tello """

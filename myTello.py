@@ -17,7 +17,7 @@ class MyTello(Tello):
     ''' override Tello '''
     def __init__(self, host=Tello.TELLO_IP, retry_count=Tello.RETRY_COUNT, log_level=logging.INFO,
                 commandCallback = None, postCmdCallback = None, videoSize = (960, 720), videoPosition = None,
-                faceClassifierFile=''):
+                videoStamping = False, faceClassifierFile=''):
         Tello.LOGGER.setLevel(log_level)	# logging.DEBUG logging.WARNING logging.INFO
         super(MyTello, self).__init__(host, retry_count)
         self._videoWorkerThread = None
@@ -26,10 +26,12 @@ class MyTello(Tello):
         self.faceTracking = False
         self.videoSize = videoSize
         self.videoPosition = videoPosition
+        self.videoStamping = videoStamping
         self.faceClassifierFile = faceClassifierFile
         self.faceTracker = None
         self.videoFileName = ''
         self.videoFrame = None
+        self.latestCommand = ''
         self.commandCallback = commandCallback
         self.postCmdCallback = postCmdCallback
 
@@ -84,13 +86,24 @@ class MyTello(Tello):
         return False # never reached
 
     # override to handle callback 
-    def send_command_without_return(self, command: str):
-        """Send command to Tello without expecting a response.
-        Internal method, you normally wouldn't call this yourself.
+    def reboot(self):
+        """Reboots the drone
         """
-        # Commands very consecutive makes the drone not respond to them. So wait at least self.TIME_BTW_COMMANDS seconds
-        self._logCommand(command)
-        super(MyTello, self).send_command_without_return(command)
+        self._logCommand('reboot')
+        self.send_command_without_return('reboot')
+
+    # override to handle callback plus extra context for command
+    def send_rc_control(self, left_right_velocity: int, forward_backward_velocity: int, up_down_velocity: int, yaw_velocity: int, context: str = ''):
+        """Send RC control via four channels. Command is sent every self.TIME_BTW_RC_CONTROL_COMMANDS seconds.
+        Arguments:
+            left_right_velocity: -100~100 (left/right)
+            forward_backward_velocity: -100~100 (forward/backward)
+            up_down_velocity: -100~100 (up/down)
+            yaw_velocity: -100~100 (yaw)
+        """
+        cmd = '%s: rc %i %i %i %i' %(context, left_right_velocity, forward_backward_velocity, up_down_velocity, yaw_velocity)
+        self._logCommand(cmd)
+        super(MyTello, self).send_rc_control(left_right_velocity, forward_backward_velocity, up_down_velocity, yaw_velocity)
 
     # override with simplified message 
     def raise_result_error(self, command: str, response: str) -> bool:
@@ -194,16 +207,21 @@ class MyTello(Tello):
 
     def _logCommand(self, msg):
         Log.info(msg)
+        self.latestCommand = msg
         if self.commandCallback is not None:
             self.commandCallback(msg)
 
     def _logCommandResult(self, cmd, result):
-        Log.info('%s => %s' %(cmd, result))
+        msg = '%s => %s' %(cmd, result)
+        Log.info(msg)
+        self.latestCommand = msg
         if self.postCmdCallback is not None:
             self.postCmdCallback(cmd, result)
 
     def _logException(self, cmd, err):
-        Log.error('Error %s: %s' %(cmd, str(err)))
+        msg = 'Error %s: %s' %(cmd, str(err))
+        Log.error(msg)
+        self.latestCommand = msg
         if self.commandCallback is not None:
             self.commandCallback('Error: %s' %cmd)
 
@@ -241,6 +259,11 @@ class MyTello(Tello):
 
                 if self.faceTracking:
                     frame = self.faceTracker.detectOrTrack(frame)
+
+                if self.videoStamping:
+                    cv2.putText(frame, timestamp(), (3, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                    cv2.putText(frame, str(self.get_height()), (3, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                    cv2.putText(frame, self.latestCommand, (3, 38), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
                 if self.recordingVideo:
                     if videoWriter is None:

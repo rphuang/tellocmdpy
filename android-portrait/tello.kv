@@ -70,7 +70,7 @@
             text_size: self.size
             halign: 'left'
             valign: 'middle'
-            on_text_validate: root.videoWidth = int(self.text)
+            on_text_validate: root.setVideoWidth(self.text)
         Label:
             text: 'Speed: '
             size_hint_x: 0.2
@@ -100,7 +100,7 @@
             text_size: self.size
             halign: 'left'
             valign: 'middle'
-            on_text_validate: root.videoHeight = int(self.text)
+            on_text_validate: root.setVideoHeight(self.text)
         Label:
             text: 'Status: '
             size_hint_x: 0.2
@@ -189,30 +189,30 @@
             Button:
                 id: CircleLeftButton
                 text: 'Circle Left'
-                on_press: root.sendRcControl(-1, 1, 0, 1)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(-1, 1, 0, 1, 'CircleLeft')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: UpButton
                 text: 'Up'
-                on_press: root.sendRcControl(0, 0, 1, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, 0, 1, 0, 'Up')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     id: CCWButton
                     text: 'CCW Rotate'
-                    on_press: root.sendRcControl(0, 0, 0, -1)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(0, 0, 0, -1, 'CCW')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
                 Button:
                     id: CWButton
                     text: 'CW Rotate'
-                    on_press: root.sendRcControl(0, 0, 0, 1)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(0, 0, 0, 1, 'CW')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: DownButton
                 text: 'Down'
-                on_press: root.sendRcControl(0, 0, -1, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, 0, -1, 0, 'Down')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
 
         BoxLayout:
             orientation: 'vertical'
@@ -220,28 +220,28 @@
             Button:
                 id: CircleRightButton
                 text: 'Circle Right'
-                on_press: root.sendRcControl(1, 1, 0, -1)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(1, 1, 0, -1, 'CircleRight')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: ForwardButton
                 text: 'Forward'
-                on_press: root.sendRcControl(0, 1, 0, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, 1, 0, 0, 'Forward')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     id: LeftButton
                     text: 'Left'
-                    on_press: root.sendRcControl(-1, 0, 0, 0)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(-1, 0, 0, 0, 'Left')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
                 Button:
                     id: RightButton
                     text: 'Right'
-                    on_press: root.sendRcControl(1, 0, 0, 0)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(1, 0, 0, 0, 'Right')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: BackwardButton
                 text: 'Backward'
-                on_press: root.sendRcControl(0, -1, 0, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, -1, 0, 0, 'Backward')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
 

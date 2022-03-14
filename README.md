@@ -4,6 +4,7 @@ This is a simple Python GUI to control Tello drone. It provides following featur
 * run Tello commands from a file
 * set/adjust drone speed
 * set/adjust stream/video resolution
+* time stamp on video and photos with drone height and latest command
 * extensible UI that can be customized
 
 Also a simple command line tool is included (telloCmd.py).
@@ -36,6 +37,9 @@ Also a simple command line tool is included (telloCmd.py).
 * DefaultVideoFolder - default folder for saving video file
 * StatusUpdateInterval - specify how often to update the drone status (in second)
 * Video.Classifier - the classifier used to detect and track faces
+* Video.Streaming - whether to start video streaming after connect
+* Video.Redording - whether to start video recording after connect
+* Video.Stamping - whether to stamp flight information on video
 
 ## UI Inputs
 The following inputs allow user to change default settings.

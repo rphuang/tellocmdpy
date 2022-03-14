@@ -54,138 +54,138 @@
         orientation: 'horizontal'
         size_hint_y: 0.5
 
-		ScrollView:
-			do_scroll_x: False
-			do_scroll_y: True
-			size_hint: (0.6, 1)
-			#size: self.size
-			Label:
-				id: CommandLabel
-				text: 'cmd: '
-				#text_size: root.width, None
-				size: self.texture_size
-				text_size: self.size
-				halign: 'left'
-				valign: 'top'
-				
-		GridLayout:
-			id: exifGrid
-			cols: 2
-			size_hint: (0.3, 1)
-			row_force_default: True
-			row_default_height: 28
-			#padding: 10, 10
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint: (0.6, 1)
+            #size: self.size
+            Label:
+                id: CommandLabel
+                text: 'cmd: '
+                #text_size: root.width, None
+                size: self.texture_size
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'
+                
+        GridLayout:
+            id: exifGrid
+            cols: 2
+            size_hint: (0.3, 1)
+            row_force_default: True
+            row_default_height: 28
+            #padding: 10, 10
 
-			Label:
-				text: 'Speed: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			TextInput:
-				id: SpeedInput
-				text: '50'
-				multiline: False
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-				on_text_validate: root.setSpeed(self.text)
-			Label:
-				text: 'Width: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			TextInput:
-				id: WidthInput
-				text: '960'
-				multiline: False
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-				on_text_validate: root.videoWidth = int(self.text)
-			Label:
-				text: 'Height: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			TextInput:
-				id: HeightInput
-				text: '720'
-				multiline: False
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-				on_text_validate: root.videoHeight = int(self.text)
-			Label:
-				text: 'Status: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				id: StatusLabel
-				text: 'Not Connected'
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				text: 'Height: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				id: HeightLabel
-				text: '0'
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				text: 'Battery: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				id: BatteryLabel
-				text: '100%'
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				text: 'Flight Time: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				id: FlighttimeLabel
-				text: '0'
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				text: 'Temperature: '
-				size_hint_x: 0.2
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
-			Label:
-				id: TempLabel
-				text: ' '
-				size_hint_x: 0.3
-				text_size: self.size
-				halign: 'left'
-				valign: 'middle'
+            Label:
+                text: 'Speed: '
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            TextInput:
+                id: SpeedInput
+                text: '50'
+                multiline: False
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                on_text_validate: root.setSpeed(self.text)
+            Label:
+                text: 'Video Width'
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            TextInput:
+                id: WidthInput
+                text: '960'
+                multiline: False
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                on_text_validate: root.setVideoWidth(self.text)
+            Label:
+                text: 'Video Height'
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            TextInput:
+                id: HeightInput
+                text: '720'
+                multiline: False
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                on_text_validate: root.setVideoHeight(self.text)
+            Label:
+                text: 'Status: '
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                id: StatusLabel
+                text: 'Not Connected'
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                text: 'Height: '
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                id: HeightLabel
+                text: '0'
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                text: 'Battery: '
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                id: BatteryLabel
+                text: '100%'
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                text: 'Flight Time: '
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                id: FlighttimeLabel
+                text: '0'
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                text: 'Temperature: '
+                size_hint_x: 0.2
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+            Label:
+                id: TempLabel
+                text: ' '
+                size_hint_x: 0.3
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
 
     BoxLayout:
         orientation: 'horizontal'
@@ -197,30 +197,30 @@
             Button:
                 id: CircleLeftButton
                 text: 'Circle Left'
-                on_press: root.sendRcControl(-1, 1, 0, 1)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(-1, 1, 0, 1, 'CircleLeft')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: UpButton
                 text: 'Up'
-                on_press: root.sendRcControl(0, 0, 1, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, 0, 1, 0, 'Up')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     id: CCWButton
                     text: 'CCW Rotate'
-                    on_press: root.sendRcControl(0, 0, 0, -1)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(0, 0, 0, -1, 'CCW')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
                 Button:
                     id: CWButton
                     text: 'CW Rotate'
-                    on_press: root.sendRcControl(0, 0, 0, 1)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(0, 0, 0, 1, 'CW')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: DownButton
                 text: 'Down'
-                on_press: root.sendRcControl(0, 0, -1, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, 0, -1, 0, 'Down')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
 
         BoxLayout:
             orientation: 'vertical'
@@ -228,28 +228,28 @@
             Button:
                 id: CircleRightButton
                 text: 'Circle Right'
-                on_press: root.sendRcControl(1, 1, 0, -1)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(1, 1, 0, -1, 'CircleRight')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: ForwardButton
                 text: 'Forward'
-                on_press: root.sendRcControl(0, 1, 0, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, 1, 0, 0, 'Forward')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     id: LeftButton
                     text: 'Left'
-                    on_press: root.sendRcControl(-1, 0, 0, 0)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(-1, 0, 0, 0, 'Left')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
                 Button:
                     id: RightButton
                     text: 'Right'
-                    on_press: root.sendRcControl(1, 0, 0, 0)
-                    on_release: root.sendRcControl(0, 0, 0, 0)
+                    on_press: root.sendRcControl(1, 0, 0, 0, 'Right')
+                    on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
             Button:
                 id: BackwardButton
                 text: 'Backward'
-                on_press: root.sendRcControl(0, -1, 0, 0)
-                on_release: root.sendRcControl(0, 0, 0, 0)
+                on_press: root.sendRcControl(0, -1, 0, 0, 'Backward')
+                on_release: root.sendRcControl(0, 0, 0, 0, 'Stop')
 
