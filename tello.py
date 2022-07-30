@@ -27,6 +27,8 @@ class MainWidget(BoxLayout):
         self.videoStreaming = config.getOrAddBool('Video.Streaming', False)
         self.videoRedording = config.getOrAddBool('Video.Redording', False)
         self.videoStamping = config.getOrAddBool('Video.Stamping', False)
+        self.videoWindowTop = config.getOrAddInt('Video.Window.top', 30)
+        self.videoWindowLeft = config.getOrAddInt('Video.Window.left', 10)
         self.defaultSpeed = int(self.ids.SpeedInput.text)
         self.videoWidth = int(self.ids.WidthInput.text)
         self.videoHeight = int(self.ids.HeightInput.text)
@@ -169,8 +171,7 @@ class MainWidget(BoxLayout):
         Log.info('Run command %s for %i times' %(cmd, count))
 
     def _setVideoSizePosition(self):
-        windowWidth, windowHeight = Window.size
-        videoPosition = (Window.left + windowWidth, 0)
+        videoPosition = (self.videoWindowLeft, self.videoWindowTop)
         self.tello.setVideoSizePosition(videoSize = (self.videoWidth, self.videoHeight), videoPosition = videoPosition)
 
     def _updateStatus(self):

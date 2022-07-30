@@ -15,7 +15,7 @@ Also a simple command line tool is included (telloCmd.py).
     * DJITelloPy at https://github.com/damiafuentes/DJITelloPy.
     * OpenCV - opencv-python
     * Kivy 
-    * dlib
+    * CMake, dlib
     * IotDevicesPy at https://github.com/rphuang/IotDevicesPy (only dlib dependency is required others like flask and pylgbst are not required)
 3. Start Tello drone and connect to its WiFi
 4. For Windows machine, 
@@ -36,6 +36,8 @@ Also a simple command line tool is included (telloCmd.py).
 * DefaultPhotoFolder - default folder for saving photo file
 * DefaultVideoFolder - default folder for saving video file
 * StatusUpdateInterval - specify how often to update the drone status (in second)
+* Video.Window.top - set the top position for the video streaming window
+* Video.Window.left - set the left position for the video streaming window
 * Video.Classifier - the classifier used to detect and track faces
 * Video.Streaming - whether to start video streaming after connect
 * Video.Redording - whether to start video recording after connect

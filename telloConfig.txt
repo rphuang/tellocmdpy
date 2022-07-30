@@ -1,15 +1,17 @@
 # tello configuration file for Windows landscape
 Window.fullscreen=False
 Window.top=30
-Window.left=62
-Window.width=900
-Window.height=800
+Window.left=960
+Window.width=700
+Window.height=850
 #
 DelayForContinuousCommands=0.1
 DefaultPhotoFolder=C:\temp\tello
 DefaultVideoFolder=C:\temp\tello
 StatusUpdateInterval=1.0
 #
+Video.Window.top=0
+Video.Window.left=0
 Video.Classifier=data\haarcascade_frontalface_alt.xml
 Video.Streaming=True
 Video.Redording=False
